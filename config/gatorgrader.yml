@@ -1,0 +1,40 @@
+---
+name: cmpsc-302-spring-2019-lab3
+break: true
+indent: 4
+---
+# --> check the source code for various characteristics
+# note that without an "--exact" the check is an "at least"
+src/www/:
+    index.html:
+        ConfirmFileExists
+        MatchFileFragment --fragment "<title>Share Your Travels</title>" --count 1 --exact
+        MatchFileFragment --fragment "<h1>Share Your Travels</h1>" --count 1 --exact
+        MatchFileFragment --fragment "<h3>Reviews</h3>" --count 1 --exact
+        MatchFileFragment --fragment "<p>" --count 15
+        MatchFileFragment --fragment "<time>" --count 5
+        MatchFileFragment --fragment "<blockquote>" --count 5
+        MatchFileFragment --fragment "<html>" --count 1 --exact
+        MatchFileFragment --fragment "<head>" --count 1 --exact
+        MatchFileFragment --fragment "<body>" --count 1 --exact
+        MatchFileFragment --fragment "github.css" --count 1 --exact
+        MatchFileFragment --fragment "emoji.css" --count 1 --exact
+        MatchFileFragment --fragment "TODO" --count 0 --exact
+# --> check the technical writing
+# mdl is a Markdown linting tool
+# proselint checks writing for common mistakes
+writing/reflection.md:
+    mdl
+    proselint
+    ConfirmFileExists
+    CountFileParagraphs --count 5
+    CountParagraphWords --count 100
+# --> check the submission image exists
+images/travels_submission.png:
+    ConfirmFileExists
+# --> check the number of commits beyond a threshold
+CountCommits --count 15
+# --> check that the linter executes and produces 0 lines of output
+ExecuteCommand --command "htmlhint src/www/index.html"
+CountCommandOutput --command "htmlhint src/www/index.html" --count 1 --exact
+MatchCommandFragment --command "htmlhint src/www/index.html" --fragment "no errors found" --count 1 --exact
